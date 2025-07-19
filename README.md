@@ -1,5 +1,6 @@
 ## Blockchain exchange platform for sustainable development in Africa
-👋AFRNANCE Platform Features
+👋Financial blockchain exchange system for AFRNANCE. This is an ambitious project that combines cryptocurrency exchange, environmental impact, and social good. 
+AFRNANCE Platform Features
 Core Functionality:
 
 Multi-chain Support: Ethereum, Celo, Polygon, Base, Arbitrum, Optimism, Solana, Metis, Hedera
