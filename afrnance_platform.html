@@ -718,6 +718,652 @@
                     <option value="optimism">Optimism</option>
                     <option value="solana">Solana</option>
                     <option value="celo">Celo</option>
+                    <option value="metis">Metis</option>
+                    <option value="divvi">Divvi</option>
+                    <option value="hedera">Hedera</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Your Wallet Address</label>
+                <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; word-break: break-all; font-family: monospace;" id="receiveAddress">
+                    0x1234567890abcdef1234567890abcdef12345678
+                </div>
+                <button class="action-btn btn-primary" onclick="copyAddress()" style="margin-top: 1rem; width: 100%;">Copy Address</button>
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <div style="background: white; padding: 2rem; border-radius: 15px; display: inline-block;">
+                    <div id="qrCode" style="width: 200px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #666;">
+                        QR Code will appear here
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('withdrawModal')">&times;</button>
+            <h2 style="margin-bottom: 1.5rem; color: #4ade80;">Withdraw to Mobile Money</h2>
+            <div class="form-group">
+                <label class="form-label">Select Cryptocurrency</label>
+                <select class="form-input" id="withdrawCrypto">
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="USDT">Tether (USDT)</option>
+                    <option value="USDC">USD Coin (USDC)</option>
+                    <option value="DAI">Dai (DAI)</option>
+                    <option value="SOL">Solana (SOL)</option>
+                    <option value="CELO">Celo (CELO)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Amount to Withdraw</label>
+                <input type="number" class="form-input" id="withdrawAmount" placeholder="0.00" step="0.000001">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mobile Money Provider</label>
+                <select class="form-input" id="mmProvider">
+                    <option value="mtn">MTN Mobile Money</option>
+                    <option value="airtel">Airtel Money</option>
+                    <option value="telesom">Telesom ZAAD</option>
+                    <option value="orange">Orange Money</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mobile Money Number</label>
+                <input type="tel" class="form-input" id="mmNumber" placeholder="+256 XXX XXX XXX">
+            </div>
+            <div style="background: rgba(74, 222, 128, 0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid rgba(74, 222, 128, 0.3);">
+                <strong>Conversion Preview:</strong><br>
+                <span id="conversionPreview">Enter amount to see conversion</span>
+            </div>
+            <button class="cta-button" onclick="withdrawToMobileMoney()" style="width: 100%;">
+                Withdraw to Mobile Money
+            </button>
+        </div>
+    </div>
+
+    <!-- Buy Modal -->
+    <div id="buyModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('buyModal')">&times;</button>
+            <h2 style="margin-bottom: 1.5rem; color: #4ade80;">Buy Cryptocurrency</h2>
+            <div class="form-group">
+                <label class="form-label">Amount in UGX</label>
+                <input type="number" class="form-input" id="buyAmountUGX" placeholder="100000" onchange="updateBuyPreview()">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Select Cryptocurrency</label>
+                <select class="form-input" id="buyCrypto" onchange="updateBuyPreview()">
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="USDT">Tether (USDT)</option>
+                    <option value="USDC">USD Coin (USDC)</option>
+                    <option value="DAI">Dai (DAI)</option>
+                    <option value="SOL">Solana (SOL)</option>
+                    <option value="CELO">Celo (CELO)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Payment Method</label>
+                <select class="form-input" id="paymentMethod">
+                    <option value="mtn">MTN Mobile Money</option>
+                    <option value="airtel">Airtel Money</option>
+                    <option value="bank">Bank Transfer</option>
+                </select>
+            </div>
+            <div style="background: rgba(74, 222, 128, 0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid rgba(74, 222, 128, 0.3);">
+                <strong>You will receive:</strong><br>
+                <span id="buyPreview">0 ETH</span>
+            </div>
+            <button class="cta-button" onclick="buyCrypto()" style="width: 100%;">
+                Buy Cryptocurrency
+            </button>
+        </div>
+    </div>
+
+    <!-- Sell Modal -->
+    <div id="sellModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('sellModal')">&times;</button>
+            <h2 style="margin-bottom: 1.5rem; color: #4ade80;">Sell Cryptocurrency</h2>
+            <div class="form-group">
+                <label class="form-label">Select Cryptocurrency</label>
+                <select class="form-input" id="sellCrypto" onchange="updateSellPreview()">
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="USDT">Tether (USDT)</option>
+                    <option value="USDC">USD Coin (USDC)</option>
+                    <option value="DAI">Dai (DAI)</option>
+                    <option value="SOL">Solana (SOL)</option>
+                    <option value="CELO">Celo (CELO)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Amount to Sell</label>
+                <input type="number" class="form-input" id="sellAmount" placeholder="0.00" step="0.000001" onchange="updateSellPreview()">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Receive Payment Via</label>
+                <select class="form-input" id="sellPaymentMethod">
+                    <option value="mtn">MTN Mobile Money</option>
+                    <option value="airtel">Airtel Money</option>
+                    <option value="bank">Bank Transfer</option>
+                </select>
+            </div>
+            <div style="background: rgba(74, 222, 128, 0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0; border: 1px solid rgba(74, 222, 128, 0.3);">
+                <strong>You will receive:</strong><br>
+                <span id="sellPreview">UGX 0</span>
+            </div>
+            <button class="cta-button" onclick="sellCrypto()" style="width: 100%;">
+                Sell Cryptocurrency
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Three.js Background Animation
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('three-bg'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Create animated particles
+        const particleCount = 100;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount * 3; i += 3) {
+            positions[i] = (Math.random() - 0.5) * 20;
+            positions[i + 1] = (Math.random() - 0.5) * 20;
+            positions[i + 2] = (Math.random() - 0.5) * 20;
+            
+            colors[i] = Math.random() * 0.5 + 0.5;
+            colors[i + 1] = Math.random() * 0.5 + 0.5;
+            colors[i + 2] = 1;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.05,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.6
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            particleSystem.rotation.x += 0.001;
+            particleSystem.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Application State
+        let userData = {
+            kycVerified: false,
+            walletBalances: {
+                ETH: 0,
+                USDT: 0,
+                USDC: 0,
+                DAI: 0,
+                SOL: 0,
+                CELO: 0
+            },
+            ugxBalance: 0,
+            ubiBalance: 0,
+            impactStats: {
+                treesPlanted: 0,
+                childrenSupported: 0,
+                solarPanels: 0,
+                plasticCollected: 0
+            }
+        };
+
+        // Crypto prices (mock data - in production, fetch from API)
+        const cryptoPrices = {
+            ETH: 12450000, // UGX per ETH
+            USDT: 3700,    // UGX per USDT
+            USDC: 3700,    // UGX per USDC
+            DAI: 3700,     // UGX per DAI
+            SOL: 740000,   // UGX per SOL
+            CELO: 2220     // UGX per CELO
+        };
+
+        // Network configurations
+        const networks = {
+            ethereum: {
+                name: 'Ethereum',
+                chainId: 1,
+                rpcUrl: 'https://eth-mainnet.g.alchemy.com/v2/...',
+                addressPrefix: '0x'
+            },
+            polygon: {
+                name: 'Polygon',
+                chainId: 137,
+                rpcUrl: 'https://polygon-rpc.com/',
+                addressPrefix: '0x'
+            },
+            solana: {
+                name: 'Solana',
+                chainId: null,
+                rpcUrl: 'https://api.mainnet-beta.solana.com',
+                addressPrefix: ''
+            },
+            celo: {
+                name: 'Celo',
+                chainId: 42220,
+                rpcUrl: 'https://forno.celo.org',
+                addressPrefix: '0x'
+            }
+        };
+
+        // Application Functions
+        function showSection(section) {
+            if (section === 'app' && !userData.kycVerified) {
+                startKYC();
+                return;
+            }
+            
+            document.getElementById('landing').style.display = section === 'landing' ? 'flex' : 'none';
+            document.getElementById('app').style.display = section === 'app' ? 'block' : 'none';
+            
+            if (section === 'app') {
+                updateDashboard();
+            }
+        }
+
+        function startKYC() {
+            openModal('kycModal');
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function submitKYC() {
+            const nationalId = document.getElementById('nationalId').value;
+            const fullName = document.getElementById('fullName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const idDocument = document.getElementById('idDocument').files[0];
+
+            if (!nationalId || !fullName || !phoneNumber || !idDocument) {
+                showMessage('Please fill all fields and upload ID document', 'error');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('kycSubmitText').style.display = 'none';
+            document.getElementById('kycLoading').style.display = 'inline-block';
+
+            // Simulate KYC verification process
+            setTimeout(() => {
+                userData.kycVerified = true;
+                updateKYCStatus();
+                closeModal('kycModal');
+                showSection('app');
+                showMessage('KYC verification completed successfully!', 'success');
+                
+                // Reset form
+                document.getElementById('kycSubmitText').style.display = 'inline';
+                document.getElementById('kycLoading').style.display = 'none';
+            }, 3000);
+        }
+
+        function updateKYCStatus() {
+            const indicator = document.getElementById('kycIndicator');
+            const status = document.getElementById('kycStatus');
+            
+            if (userData.kycVerified) {
+                indicator.classList.add('verified');
+                status.textContent = 'KYC Verified';
+            } else {
+                indicator.classList.remove('verified');
+                status.textContent = 'KYC Required';
+            }
+        }
+
+        function generateReceiveAddress() {
+            const network = document.getElementById('receiveNetwork').value;
+            let address;
+            
+            switch(network) {
+                case 'solana':
+                    address = generateSolanaAddress();
+                    break;
+                case 'hedera':
+                    address = '0.0.123456';
+                    break;
+                default:
+                    address = generateEvmAddress();
+            }
+            
+            document.getElementById('receiveAddress').textContent = address;
+        }
+
+        function generateEvmAddress() {
+            return '0x' + Array(40).fill().map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+        }
+
+        function generateSolanaAddress() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789';
+            return Array(44).fill().map(() => chars[Math.floor(Math.random() * chars.length)]).join('');
+        }
+
+        function copyAddress() {
+            const address = document.getElementById('receiveAddress').textContent;
+            navigator.clipboard.writeText(address).then(() => {
+                showMessage('Address copied to clipboard!', 'success');
+            });
+        }
+
+        function sendCrypto() {
+            if (!userData.kycVerified) {
+                showMessage('Please complete KYC verification first', 'error');
+                return;
+            }
+
+            const crypto = document.getElementById('sendCrypto').value;
+            const address = document.getElementById('recipientAddress').value;
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            const network = document.getElementById('sendNetwork').value;
+
+            if (!address || !amount || amount <= 0) {
+                showMessage('Please enter valid recipient address and amount', 'error');
+                return;
+            }
+
+            if (userData.walletBalances[crypto] < amount) {
+                showMessage('Insufficient balance', 'error');
+                return;
+            }
+
+            // Simulate transaction
+            userData.walletBalances[crypto] -= amount;
+            updateDashboard();
+            closeModal('sendModal');
+            showMessage(`Successfully sent ${amount} ${crypto}`, 'success');
+            
+            // Update impact stats
+            updateImpactFromTransaction(amount, crypto);
+        }
+
+        function buyCrypto() {
+            if (!userData.kycVerified) {
+                showMessage('Please complete KYC verification first', 'error');
+                return;
+            }
+
+            const ugxAmount = parseFloat(document.getElementById('buyAmountUGX').value);
+            const crypto = document.getElementById('buyCrypto').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+
+            if (!ugxAmount || ugxAmount <= 0) {
+                showMessage('Please enter a valid amount', 'error');
+                return;
+            }
+
+            const cryptoAmount = ugxAmount / cryptoPrices[crypto];
+            
+            // Simulate purchase
+            userData.walletBalances[crypto] += cryptoAmount;
+            userData.ugxBalance -= ugxAmount;
+            
+            updateDashboard();
+            closeModal('buyModal');
+            showMessage(`Successfully purchased ${cryptoAmount.toFixed(6)} ${crypto}`, 'success');
+            
+            // Update impact stats
+            updateImpactFromTransaction(cryptoAmount, crypto);
+        }
+
+        function sellCrypto() {
+            if (!userData.kycVerified) {
+                showMessage('Please complete KYC verification first', 'error');
+                return;
+            }
+
+            const crypto = document.getElementById('sellCrypto').value;
+            const amount = parseFloat(document.getElementById('sellAmount').value);
+            const paymentMethod = document.getElementById('sellPaymentMethod').value;
+
+            if (!amount || amount <= 0) {
+                showMessage('Please enter a valid amount', 'error');
+                return;
+            }
+
+            if (userData.walletBalances[crypto] < amount) {
+                showMessage('Insufficient balance', 'error');
+                return;
+            }
+
+            const ugxAmount = amount * cryptoPrices[crypto];
+            
+            // Simulate sale
+            userData.walletBalances[crypto] -= amount;
+            userData.ugxBalance += ugxAmount;
+            
+            updateDashboard();
+            closeModal('sellModal');
+            showMessage(`Successfully sold ${amount} ${crypto} for UGX ${ugxAmount.toLocaleString()}`, 'success');
+            
+            // Update impact stats
+            updateImpactFromTransaction(amount, crypto);
+        }
+
+        function withdrawToMobileMoney() {
+            if (!userData.kycVerified) {
+                showMessage('Please complete KYC verification first', 'error');
+                return;
+            }
+
+            const crypto = document.getElementById('withdrawCrypto').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const provider = document.getElementById('mmProvider').value;
+            const number = document.getElementById('mmNumber').value;
+
+            if (!amount || amount <= 0 || !number) {
+                showMessage('Please fill all fields with valid data', 'error');
+                return;
+            }
+
+            if (userData.walletBalances[crypto] < amount) {
+                showMessage('Insufficient balance', 'error');
+                return;
+            }
+
+            const ugxAmount = amount * cryptoPrices[crypto];
+            const fee = ugxAmount * 0.02; // 2% fee
+            const finalAmount = ugxAmount - fee;
+            
+            // Simulate withdrawal
+            userData.walletBalances[crypto] -= amount;
+            
+            updateDashboard();
+            closeModal('withdrawModal');
+            showMessage(`Withdrawal of UGX ${finalAmount.toLocaleString()} initiated to ${provider}`, 'success');
+            
+            // Update impact stats
+            updateImpactFromTransaction(amount, crypto);
+        }
+
+        function claimUBI() {
+            if (!userData.kycVerified) {
+                showMessage('Please complete KYC verification first', 'error');
+                return;
+            }
+
+            // Simulate daily UBI claim (10 $G tokens)
+            const dailyUBI = 10;
+            userData.ubiBalance += dailyUBI;
+            
+            document.getElementById('ubiBalance').textContent = `${userData.ubiBalance} $G`;
+            showMessage(`Claimed ${dailyUBI} $G tokens! Supporting sustainable development.`, 'success');
+        }
+
+        function updateBuyPreview() {
+            const ugxAmount = parseFloat(document.getElementById('buyAmountUGX').value) || 0;
+            const crypto = document.getElementById('buyCrypto').value;
+            const cryptoAmount = ugxAmount / cryptoPrices[crypto];
+            
+            document.getElementById('buyPreview').textContent = `${cryptoAmount.toFixed(6)} ${crypto}`;
+        }
+
+        function updateSellPreview() {
+            const amount = parseFloat(document.getElementById('sellAmount').value) || 0;
+            const crypto = document.getElementById('sellCrypto').value;
+            const ugxAmount = amount * cryptoPrices[crypto];
+            const fee = ugxAmount * 0.02;
+            const final = ugxAmount - fee;
+            
+            document.getElementById('sellPreview').textContent = `UGX ${final.toLocaleString()} (Fee: UGX ${fee.toLocaleString()})`;
+        }
+
+        function updateImpactFromTransaction(amount, crypto) {
+            // Calculate impact based on transaction volume
+            const ugxValue = amount * cryptoPrices[crypto];
+            const impactMultiplier = ugxValue / 100000; // 1 impact point per 100k UGX
+            
+            userData.impactStats.treesPlanted += Math.floor(impactMultiplier * 2);
+            userData.impactStats.childrenSupported += Math.floor(impactMultiplier * 0.5);
+            userData.impactStats.solarPanels += Math.floor(impactMultiplier * 0.1);
+            userData.impactStats.plasticCollected += Math.floor(impactMultiplier * 5);
+            
+            // Update display
+            document.getElementById('treesPlanted').textContent = userData.impactStats.treesPlanted;
+            document.getElementById('childrenSupported').textContent = userData.impactStats.childrenSupported;
+            document.getElementById('solarPanels').textContent = userData.impactStats.solarPanels;
+            document.getElementById('plasticCollected').textContent = userData.impactStats.plasticCollected;
+        }
+
+        function updateDashboard() {
+            // Calculate total balance in UGX
+            let totalUGX = userData.ugxBalance;
+            for (const [crypto, balance] of Object.entries(userData.walletBalances)) {
+                totalUGX += balance * cryptoPrices[crypto];
+            }
+            
+            document.getElementById('totalBalance').textContent = `UGX ${totalUGX.toLocaleString()}`;
+            document.getElementById('ubiBalance').textContent = `${userData.ubiBalance} $G`;
+            
+            updateKYCStatus();
+        }
+
+        function selectCrypto(crypto) {
+            showMessage(`Selected ${crypto}. Use the action buttons to buy, sell, or transfer.`, 'success');
+        }
+
+        function showMessage(message, type) {
+            // Create message element
+            const messageEl = document.createElement('div');
+            messageEl.className = type === 'success' ? 'success-message' : 'error-message';
+            messageEl.textContent = message;
+            messageEl.style.position = 'fixed';
+            messageEl.style.top = '100px';
+            messageEl.style.right = '20px';
+            messageEl.style.zIndex = '3000';
+            messageEl.style.minWidth = '300px';
+            messageEl.style.animation = 'slideIn 0.3s ease';
+            
+            document.body.appendChild(messageEl);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                messageEl.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(messageEl);
+                }, 300);
+            }, 5000);
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboard();
+            generateReceiveAddress();
+            
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+        // Auto-update crypto prices (simulate real-time data)
+        setInterval(() => {
+            Object.keys(cryptoPrices).forEach(crypto => {
+                const change = (Math.random() - 0.5) * 0.02; // ±1% change
+                cryptoPrices[crypto] *= (1 + change);
+            });
+            updateDashboard();
+        }, 30000); // Update every 30 seconds
+
+        // Mobile responsiveness
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Add mobile menu button
+        if (window.innerWidth <= 768) {
+            const mobileMenuBtn = document.createElement('button');
+            mobileMenuBtn.innerHTML = '☰';
+            mobileMenuBtn.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background: rgba(74, 222, 128, 0.8);
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                padding: 10px;
+                border-radius: 5px;
+                z-index: 1001;
+            `;
+            mobileMenuBtn.onclick = toggleMobileMenu;
+            document.body.appendChild(mobileMenuBtn);
+        }
+
+        // Service Worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful');
+                }, function(err) {
+                    console.log('ServiceWorker registration failed');
+                });
+            });
+        }
+    </script>
+</body>
+</html>Solana</option>
+                    <option value="celo">Celo</option>
                 </select>
             </div>
             <button class="cta-button" onclick="sendCrypto()" style="width: 100%;">Send</button>
